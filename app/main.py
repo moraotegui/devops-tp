@@ -9,6 +9,7 @@ libros = [
     {"id": 1, "titulo": "Cien años de soledad", "autor": "Gabriel García Márquez", "genero": "Realismo mágico"},
     {"id": 2, "titulo": "El principito", "autor": "Antoine de Saint-Exupéry", "genero": "Ficción"},
     {"id": 3, "titulo": "1984", "autor": "George Orwell", "genero": "Distopía"},
+    {"id": 4, "titulo": "Harry Potter y la piedra filosofal", "autor": "J.K. Rowling", "genero": "Fantasía"},
 ]
 
 @app.get("/")
