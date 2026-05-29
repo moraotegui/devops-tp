@@ -3,20 +3,35 @@ newrelic.agent.initialize('newrelic.ini')
 
 from fastapi import FastAPI
 
-app = FastAPI(title="DevOps TP API")
+app = FastAPI(title="API de Libros")
+
+libros = [
+    {"id": 1, "titulo": "Cien años de soledad", "autor": "Gabriel García Márquez", "genero": "Realismo mágico"},
+    {"id": 2, "titulo": "El principito", "autor": "Antoine de Saint-Exupéry", "genero": "Ficción"},
+    {"id": 3, "titulo": "1984", "autor": "George Orwell", "genero": "Distopía"},
+]
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "API funcionando"}
+    return {"status": "ok", "message": "API de Libros funcionando"}
 
 @app.get("/health")
 def health():
     return {"healthy": True}
 
-@app.get("/items/{item_id}")
-def get_item(item_id: int):
-    return {"item_id": item_id, "name": f"Item {item_id}"}
+@app.get("/libros")
+def get_libros():
+    return {"libros": libros, "total": len(libros)}
 
-@app.post("/items")
-def create_item(name: str):
-    return {"created": True, "name": name}
+@app.get("/libros/{libro_id}")
+def get_libro(libro_id: int):
+    libro = next((l for l in libros if l["id"] == libro_id), None)
+    if not libro:
+        return {"error": "Libro no encontrado"}
+    return libro
+
+@app.post("/libros")
+def crear_libro(titulo: str, autor: str, genero: str):
+    nuevo = {"id": len(libros) + 1, "titulo": titulo, "autor": autor, "genero": genero}
+    libros.append(nuevo)
+    return {"creado": True, "libro": nuevo}

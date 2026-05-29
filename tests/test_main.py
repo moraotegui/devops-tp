@@ -13,7 +13,12 @@ def test_health():
     assert response.status_code == 200
     assert response.json()["healthy"] is True
 
-def test_get_item():
-    response = client.get("/items/42")
+def test_get_libros():
+    response = client.get("/libros")
     assert response.status_code == 200
-    assert response.json()["item_id"] == 42
+    assert response.json()["total"] == 3
+
+def test_get_libro():
+    response = client.get("/libros/1")
+    assert response.status_code == 200
+    assert response.json()["titulo"] == "Cien años de soledad"
