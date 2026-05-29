@@ -16,7 +16,7 @@ def test_health():
 def test_get_libros():
     response = client.get("/libros")
     assert response.status_code == 200
-    assert response.json()["total"] == 4
+    assert response.json()["total"] == 5
 
 def test_get_libro():
     response = client.get("/libros/1")
