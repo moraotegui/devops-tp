@@ -1,5 +1,6 @@
+import os
 import newrelic.agent
-newrelic.agent.initialize('newrelic.ini')
+newrelic.agent.initialize()
 
 from fastapi import FastAPI
 
