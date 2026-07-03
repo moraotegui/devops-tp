@@ -10,10 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Obtener fecha como versión
-        id: version
-        run: echo "tag=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
-
       - name: Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
         with:
@@ -27,7 +23,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/devops-tp:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/devops-tp:${{ steps.version.outputs.tag }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/devops-tp:v1.0.${{ github.run_number }}
 
   deploy:
     runs-on: ubuntu-latest
