@@ -1,10 +1,11 @@
 import os
 import newrelic.agent
 newrelic.agent.initialize()
-
 from fastapi import FastAPI
 
 app = FastAPI(title="API de Libros")
+
+APP_VERSION = os.getenv("APP_VERSION", "dev")
 
 # Lista de libros del catálogo
 libros = [
@@ -23,14 +24,16 @@ def root():
 def health():
     return {"healthy": True}
 
+@app.get("/version")
+def version():
+    return {"version": APP_VERSION}
+
 @app.get("/libros")
 def get_libros():
-    # Devuelve todos los libros del catálogo
     return {"libros": libros, "total": len(libros)}
 
 @app.get("/libros/{libro_id}")
 def get_libro(libro_id: int):
-    # Busca un libro por su ID
     libro = next((l for l in libros if l["id"] == libro_id), None)
     if not libro:
         return {"error": "Libro no encontrado"}
@@ -38,7 +41,6 @@ def get_libro(libro_id: int):
 
 @app.post("/libros")
 def crear_libro(titulo: str, autor: str, genero: str):
-    # Agrega un libro nuevo al catálogo
     nuevo = {"id": len(libros) + 1, "titulo": titulo, "autor": autor, "genero": genero}
     libros.append(nuevo)
     return {"creado": True, "libro": nuevo}
