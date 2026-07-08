@@ -37,10 +37,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: publish
     steps:
-      - name: Desplegar versión específica en Render
+      - name: Setear versión en Render
+        run: |
+          curl -X PUT \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/env-vars/APP_VERSION" \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"value": "${{ needs.publish.outputs.version }}"}'
+
+      - name: Disparar deploy en Render
         run: |
           curl -X POST \
             "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Content-Type: application/json" \
-            -d '{"imageUrl": "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/devops-tp:${{ needs.publish.outputs.version }}"}'
+            -d '{}'
