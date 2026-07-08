@@ -1,28 +1,25 @@
 # Build
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --user --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --target=/app/packages -r requirements.txt
 
-#Runtime
-FROM python:3.11-slim
+# Runtime
+FROM python:3.12-slim
 
 RUN addgroup --system appgroup && \
-    adduser --system --ingroup appgroup --home /home/appuser appuser
+    adduser --system --ingroup appgroup appuser
 
 WORKDIR /app
-
-COPY --from=builder /root/.local /home/appuser/.local
-COPY . .
-
-ENV PATH=/home/appuser/.local/bin:$PATH \
-    HOME=/home/appuser
+COPY --from=builder /app/packages /app/packages
+COPY app/ ./app/
+ENV PYTHONPATH=/app/packages
 
 ARG APP_VERSION=dev
 ENV APP_VERSION=$APP_VERSION
 
-RUN chown -R appuser:appgroup /app /home/appuser
+RUN chown -R appuser:appgroup /app
 USER appuser
 
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

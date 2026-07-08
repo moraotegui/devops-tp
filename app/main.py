@@ -1,6 +1,7 @@
 import os
 import newrelic.agent
 newrelic.agent.initialize()
+
 from fastapi import FastAPI
 
 app = FastAPI(title="API de Libros")
