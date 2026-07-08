@@ -8,6 +8,7 @@ app = FastAPI(title="API de Libros")
 
 APP_VERSION = os.getenv("APP_VERSION", "dev")
 
+# Lista de libros del catálogo
 libros = [
     {"id": 1, "titulo": "Cien anos de soledad", "autor": "Gabriel Garcia Marquez", "genero": "Realismo magico"},
     {"id": 2, "titulo": "El principito", "autor": "Antoine de Saint-Exupery", "genero": "Ficcion"},

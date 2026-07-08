@@ -12,6 +12,7 @@ API REST desarrollada en Python con FastAPI que gestiona un catálogo de libros.
 | pytest | Tests unitarios |
 | Docker | Containerización (multi-stage build) |
 | GitHub Actions | CI/CD automatizado |
+| Render | Deploy automático en producción |
 | Docker Hub | Registry de imágenes |
 | New Relic | Monitoreo y APM |
 
@@ -62,7 +63,7 @@ Resultado esperado: **4 passed, 0 failed**.
 El pipeline se configura con GitHub Actions en `.github/workflows/`:
 
 - **ci.yml** — se dispara en cada push y Pull Request a `main`. Instala dependencias, corre los tests y buildea la imagen Docker. Si algún test falla, el build se detiene.
-- **cd.yml** — se dispara al mergear a `main`. Construye la imagen Docker y la publica automáticamente en Docker Hub como `moraotegui/devops-tp:latest`.
+- **cd.yml** — se dispara al mergear a `main`. Construye la imagen Docker, la publica en Docker Hub con tag `latest` y versión `v1.0.X`, y hace deploy automático a Render.
 
 ---
 
@@ -91,7 +92,18 @@ La imagen está publicada en Docker Hub y se actualiza automáticamente en cada 
 docker pull moraotegui/devops-tp:latest
 docker run -p 8000:8000 moraotegui/devops-tp:latest
 ```
+---
+## Deploy en producción
 
+La API está deployada automáticamente en Render:
+
+**URL pública:** https://devops-tp-u988.onrender.com
+
+Endpoints disponibles en producción:
+- https://devops-tp-u988.onrender.com/libros
+- https://devops-tp-u988.onrender.com/docs
+
+> El deploy se dispara automáticamente desde GitHub Actions cada vez que se mergea a main.
 ---
 
 ## Monitoreo
