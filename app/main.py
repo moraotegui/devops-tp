@@ -6,13 +6,14 @@ from fastapi import FastAPI
 
 app = FastAPI(title="API de Libros")
 
-# Lista de libros del catálogo
+APP_VERSION = os.getenv("APP_VERSION", "dev")
+
 libros = [
-    {"id": 1, "titulo": "Cien años de soledad", "autor": "Gabriel García Márquez", "genero": "Realismo mágico"},
-    {"id": 2, "titulo": "El principito", "autor": "Antoine de Saint-Exupéry", "genero": "Ficción"},
-    {"id": 3, "titulo": "1984", "autor": "George Orwell", "genero": "Distopía"},
-    {"id": 4, "titulo": "Harry Potter y la piedra filosofal", "autor": "J.K. Rowling", "genero": "Fantasía"},
-    {"id": 5, "titulo": "El alquimista", "autor": "Paulo Coelho", "genero": "Ficción"},
+    {"id": 1, "titulo": "Cien anos de soledad", "autor": "Gabriel Garcia Marquez", "genero": "Realismo magico"},
+    {"id": 2, "titulo": "El principito", "autor": "Antoine de Saint-Exupery", "genero": "Ficcion"},
+    {"id": 3, "titulo": "1984", "autor": "George Orwell", "genero": "Distopia"},
+    {"id": 4, "titulo": "Harry Potter y la piedra filosofal", "autor": "J.K. Rowling", "genero": "Fantasia"},
+    {"id": 5, "titulo": "El alquimista", "autor": "Paulo Coelho", "genero": "Ficcion"},
 ]
 
 @app.get("/")
@@ -23,14 +24,16 @@ def root():
 def health():
     return {"healthy": True}
 
+@app.get("/version")
+def version():
+    return {"version": APP_VERSION}
+
 @app.get("/libros")
 def get_libros():
-    # Devuelve todos los libros del catálogo
     return {"libros": libros, "total": len(libros)}
 
 @app.get("/libros/{libro_id}")
 def get_libro(libro_id: int):
-    # Busca un libro por su ID
     libro = next((l for l in libros if l["id"] == libro_id), None)
     if not libro:
         return {"error": "Libro no encontrado"}
@@ -38,7 +41,6 @@ def get_libro(libro_id: int):
 
 @app.post("/libros")
 def crear_libro(titulo: str, autor: str, genero: str):
-    # Agrega un libro nuevo al catálogo
     nuevo = {"id": len(libros) + 1, "titulo": titulo, "autor": autor, "genero": genero}
     libros.append(nuevo)
     return {"creado": True, "libro": nuevo}
